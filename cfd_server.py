@@ -16,6 +16,10 @@ with open(indices_filename, 'r') as f:
     indices = json.load(f)
 
 def get_latest_cfd_data():
+	"""
+	currently loops through a pre-calculated number of text files
+	TODO: function to be replaced with call to database
+	"""
 	global count
 
 	filename = files[count % len(files)]
@@ -26,6 +30,14 @@ def get_latest_cfd_data():
 	return lines
 
 def filter_inside_reduce(data, n_points):
+	"""
+	gets as input all CFD datapoints at current frame and filter them so that
+	only datapoints inside the lab area are included
+	additionally a random choice from the filtered data is made, to reduce the 
+	total number of points
+	-- data: all CFD datapoints as array of rows
+	-- n_points: the number of points to keep
+	"""
 	np.random.seed(23)
 	select_indices = np.random.choice(indices, n_points, replace=False)
 	data = np.array(data)
@@ -33,6 +45,9 @@ def filter_inside_reduce(data, n_points):
 	return select_data
 
 def data_to_text(data):
+	"""
+	convert array of strings to csv-like format
+	"""
 	text = ''
 	for line in data:
 		text += line
